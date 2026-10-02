@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Espace des mariés</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+<main>
+  <h1>Espace des mariés</h1>
+  <p class="sub">Irène &amp; Benjamin — réponses et messages de vos invités</p>
+
+  <div class="stats">
+    <div class="stat ok"><b id="sAcc">–</b><span>Présents</span></div>
+    <div class="stat ok"><b id="sSeats">–</b><span>Places</span></div>
+    <div class="stat no"><b id="sDec">–</b><span>Absents</span></div>
+    <div class="stat"><b id="sPen">–</b><span>En attente</span></div>
+    <div class="stat"><b id="sMsg">–</b><span>Messages</span></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-t="all">Tous</button>
+    <button class="tab" data-t="accepted">Présents</button>
+    <button class="tab" data-t="declined">Absents</button>
+    <button class="tab" data-t="guests">Liens invités</button>
+    <button class="tab" data-t="messages">Messages</button>
+  </div>
+
+  <div class="add" id="addBox" hidden>
+    <p>Un invité par ligne. Pour indiquer sa table : <b>Nom | Table</b> (ex. Julie Mbala | Taittinger). Chaque invité reçoit son propre lien secret.</p>
+    <textarea id="names" rows="4" placeholder="Julie Mbala | Taittinger&#10;Louis Kabongo | Moët&#10;Marie-Ange Tshala"></textarea>
+    <button class="btn" id="addBtn">Créer les liens</button>
+  </div>
+
+  <div class="tools">
+    <input id="search" type="search" placeholder="Rechercher…" aria-label="Rechercher">
+    <a class="btn" href="/api/admin/rsvps.csv">Exporter CSV</a>
+  </div>
+
+  <div class="list" id="list"></div>
+</main>
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+:root{--ink:#2b2a2e;--mute:#8b8794;--pur:#5b3f8c;--gold:#c9a24b;--beige:#f4ede4;--line:#e7dfd2}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--ink);font:400 17px/1.6 'Cormorant Garamond',Georgia,serif}
+body.lock{overflow:hidden}
+main{max-width:520px;margin:0 auto;padding-bottom:40px}
+.cin{font-family:'Cinzel',serif;text-transform:uppercase;letter-spacing:.18em}
+.script{font-family:'Pinyon Script',cursive;font-weight:400}
+h2{font:400 40px/1.1 'Pinyon Script',cursive;text-align:center;margin:0 0 22px}
+section{padding:44px 26px;text-align:center}
+.tiny{font-size:11px;color:var(--mute)}
+/* splash */
+#splash{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#fff,#f6f1f9);transition:opacity .9s,transform .9s}
+#splash.gone{opacity:0;transform:translateY(-30px);pointer-events:none}
+.scard{width:min(86vw,360px);background:#fff;border:1px solid var(--gold);outline:1px solid #f0e6c8;outline-offset:5px;padding:46px 22px 34px;text-align:center;box-shadow:0 20px 60px #5b3f8c1f}
+.scard .cin{font-size:10px;color:var(--mute)}
+.scard .names{font:400 46px/1.1 'Pinyon Script',cursive;margin:14px 0 18px}
+.scard .date{font:600 17px 'Cinzel',serif;letter-spacing:.35em;color:var(--pur)}
+.open{margin-top:28px;font:600 11px 'Cinzel',serif;letter-spacing:.2em;border:1px solid var(--pur);color:var(--pur);background:#fff;border-radius:999px;padding:13px 26px;cursor:pointer}
+.open:hover{background:var(--pur);color:#fff}
+/* hero */
+.photo{position:relative;height:68vh;min-height:400px;margin:0;border-radius:0px 0px 0 0;background:url(../images/hero.jpg) center 12%/cover no-repeat,linear-gradient(#cfc6dc,#efeaf5)}
+.photo::after{content:"";position:absolute;inset:auto 0 0;height:45%;background:linear-gradient(transparent,#fff)}
+.mono{position:relative;z-index:2;margin-top:-92px;text-align:center;font:400 62px/1 'Pinyon Script',cursive;background:linear-gradient(#b8892c,#e8cd7a,#b8892c);-webkit-background-clip:text;background-clip:text;color:transparent}
+.music{position:absolute;z-index:3;right:14px;top:14px;width:42px;height:42px;border-radius:50%;border:0;background:#0007;color:#fff;font-size:14px;cursor:pointer}
+.verse{font-style:italic;font-size:20px;color:#555;padding:30px 28px 0}
+.verse b{display:block;font:600 11px 'Cinzel',serif;letter-spacing:.18em;font-style:normal;color:var(--ink);margin-top:8px}
+/* invitation card */
+.icard{border:1px solid var(--gold);border-radius:6px;padding:30px 20px;background:linear-gradient(#fff,#fbf8f2)}
+.icard .cin{font-size:11px;color:var(--mute)}
+.icard .guest{font:600 19px 'Cinzel',serif;color:var(--pur);letter-spacing:.08em;text-transform:uppercase;margin:12px 0;overflow-wrap:anywhere}
+.icard .nm{font:400 48px/1.15 'Pinyon Script',cursive;color:var(--pur);margin-top:6px}
+.sep{width:60px;height:1px;background:var(--gold);margin:26px auto}
+.quote{color:var(--pur);font-size:17px;line-height:1.7}
+/* countdown */
+.big{font:400 38px/1.1 'Cinzel',serif;letter-spacing:.2em}
+.cd{display:flex;justify-content:center;align-items:flex-start;gap:6px;margin-top:20px}
+.cd div{min-width:58px}.cd b{display:block;font:600 40px/1 'Cinzel',serif;font-variant-numeric:tabular-nums}
+.cd span{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+.cd i{font:600 36px/1 'Cinzel',serif;font-style:normal}
+.cd .last b{color:var(--pur)}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 11px 'Cinzel',serif;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;border:0;border-radius:999px;padding:14px 24px;background:#26242b;color:#fff;cursor:pointer}
+.btn.pur{background:var(--pur)}.btn.out{background:#fff;color:var(--pur);border:1px solid var(--pur)}
+.btn:disabled{opacity:.55;cursor:default}
+/* timeline */
+.tl{position:relative;max-width:420px;margin:0 auto}
+.tl::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--pur);transform:translateX(-1px)}
+.ev{display:grid;grid-template-columns:1fr 44px 1fr;align-items:center;margin:0 0 34px;text-align:left}
+.ev .when{text-align:right;font:600 11px 'Cinzel',serif;letter-spacing:.06em;line-height:1.5}
+.ev .dot{width:40px;height:40px;border-radius:50%;background:#fff;border:2px solid var(--pur);color:var(--pur);display:grid;place-items:center;position:relative;z-index:1;font-size:17px}
+.ev .what b{display:block;font:600 12px 'Cinzel',serif;letter-spacing:.08em;text-transform:uppercase}
+.ev .what span{font-size:13px;color:var(--mute);line-height:1.3;display:block}
+/* maps + details */
+.place{margin-bottom:34px}.place .cin{font-size:13px;color:var(--pur)}
+.map{display:block;width:100%;height:210px;border:0;border-radius:18px;margin:12px 0 14px;box-shadow:0 10px 30px #0000001a}
+.det p{margin:.35em 0;font-size:16px}.det b{font:600 11px 'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase}
+.pal{display:flex;gap:12px;justify-content:center;margin-top:18px}
+.pal i{width:34px;height:34px;border-radius:50%;box-shadow:inset -4px -5px 8px #0003,0 3px 8px #0002}
+.gift{background:linear-gradient(#f3e6dc,#f6efe8);border-radius:22px;padding:36px 24px;margin:0 22px;font-style:italic;font-size:17px}
+/* rsvp */
+.rsvp small{font:400 26px 'Pinyon Script',cursive;display:block}
+.rsvp h2{font:600 44px 'Cinzel',serif;letter-spacing:.2em;margin:0 0 20px}
+.form{background:var(--beige);border-radius:20px;padding:24px 20px;text-align:left}
+.tbl{background:#f9e8cc;border-left:4px solid var(--pur);padding:9px 14px;font:600 13px 'Cinzel',serif;margin-bottom:14px;border-radius:4px}
+label.l{display:block;font:600 11px 'Cinzel',serif;letter-spacing:.06em;margin:16px 0 6px}
+input[type=text],input[type=tel],textarea{width:100%;font:inherit;font-size:16px;padding:11px 13px;border:1px solid #d8cfc2;border-radius:8px;background:#fff;color:var(--ink)}
+input:disabled,textarea:disabled{background:#f3efe9;color:#777}
+input:focus-visible,textarea:focus-visible,.btn:focus-visible,.open:focus-visible{outline:2px solid var(--pur);outline-offset:2px}
+.opt{display:flex;gap:10px;align-items:center;padding:13px 14px;border:1px solid #d8cfc2;border-radius:8px;background:#fff;margin-bottom:8px;font:600 12px 'Cinzel',serif;cursor:pointer}
+.opt:has(input:checked){border-color:var(--pur);background:#f2ecfa}
+.opt input{accent-color:var(--pur)}
+.step{display:flex;align-items:center;gap:14px}
+.step button{width:38px;height:38px;border-radius:50%;border:0;background:var(--pur);color:#fff;font-size:20px;cursor:pointer}
+.step button:disabled{opacity:.4}.step b{font:600 20px 'Cinzel',serif;min-width:24px;text-align:center}
+.ok{background:#dff3e4;color:#2f6b43;border-radius:8px;padding:11px;text-align:center;font:600 11px 'Cinzel',serif;margin-top:12px}
+.lnk{background:none;border:0;color:var(--pur);text-decoration:underline;font:inherit;cursor:pointer;margin-top:8px}
+.pass{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 18px;box-shadow:0 10px 30px #5b3f8c14}
+.pass h3{font:600 15px 'Cinzel',serif;color:var(--pur);margin:0 0 6px}
+#qr{display:inline-block;padding:12px;border:1px solid var(--pur);border-radius:12px;margin:14px 0 8px;background:#fff}
+#qr img,#qr canvas{display:block}
+/* guestbook */
+textarea.gb{font-size:16px}
+.msgs{margin-top:20px;text-align:left;display:grid;gap:10px}
+.msg{background:var(--beige);border-radius:14px;padding:12px 14px}
+.msg q{font-style:italic;overflow-wrap:anywhere;quotes:"“" "”"}
+.msg div{display:flex;justify-content:space-between;margin-top:4px;font:600 9px 'Cinzel',serif;letter-spacing:.12em;color:var(--pur);text-transform:uppercase}
+.msg small{color:var(--mute);letter-spacing:0;text-transform:none;font-family:inherit;font-weight:400;font-size:12px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);opacity:0;background:#26242b;color:#fff;padding:11px 18px;border-radius:12px;font:500 14px 'Cormorant Garamond',serif;transition:.3s;pointer-events:none;z-index:99}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .9s,transform .9s}.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}

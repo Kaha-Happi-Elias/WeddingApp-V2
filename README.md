@@ -1,141 +1,104 @@
 # Wedding invitation – Irène & Benjamin
 
-A wedding invitation site with:
-- **Guest page** (`/`): countdown, RSVP, guestbook ("Mots Doux"), QR pass, map.
-- **Personal links** (`/?g=SECRET`): one private link per guest, name pre-filled and locked.
-- **Newlyweds' dashboard** (`/admin`): who accepted / declined / hasn't answered, every message, personal links, search, CSV export, delete.
-- **Database**: SQLite. It is created automatically. You install nothing extra.
+Guest page (countdown, RSVP, guestbook, QR code, PDF ticket) + private dashboard for the newlyweds.
+Node.js + Express + SQLite. No build step.
 
-## 1. Folder layout
+## Quick start
 
 ```
-wedding-invitation/
-├── server.js            ← the server + database code
-├── package.json         ← list of dependencies
-├── .env                 ← YOUR settings (you create it, see step 3)
-├── .env.example         ← template for .env
-├── public/              ← what guests see
-│   ├── index.html
-│   └── hero.jpg         ← (optional) your couple photo
-├── admin/
-│   └── admin.html       ← the private dashboard
-└── data/
-    └── wedding.db       ← created automatically on first start
-```
-
-Put all the files exactly like this in one folder.
-
-## 2. Install Node.js (once)
-
-Download the **LTS** version from https://nodejs.org and install it.
-Check it worked: open a terminal and run `node -v` (should print v18 or higher).
-
-## 3. Set your admin password
-
-In the project folder, copy `.env.example` to a new file named `.env`:
-
-- Mac/Linux: `cp .env.example .env`
-- Windows: `copy .env.example .env`
-
-Open `.env` and choose your own values:
-
-```
-ADMIN_USER=irene-benjamin
-ADMIN_PASSWORD=a-long-password-only-you-know
-```
-
-## 4. Start it
-
-In a terminal, inside the project folder:
-
-```
+cp .env.example .env      # then edit ADMIN_USER / ADMIN_PASSWORD   (Windows: copy)
 npm install
 npm start
 ```
+- Guests:   http://localhost:3000
+- Newlyweds: http://localhost:3000/admin
+- Tests:    `npm test`   (in-memory database, writes nothing to disk)
+- Dev mode: `npm run dev` (auto-restart on changes)
 
-Then open:
-- Guests: http://localhost:3000
-- Newlyweds: http://localhost:3000/admin (your browser asks for the username and password from `.env`)
+## Project structure
 
-## 5. The database
+```
+wedding-invitation/
+├── server.js                  Entry point: starts the HTTP server
+├── package.json
+├── .env.example               Copy to .env (never share it)
+├── data/                      SQLite file appears here (wedding.db)
+│
+├── src/                       ── BACKEND (layered architecture) ──
+│   ├── app.js                 Builds the Express app (middleware + routes + static pages)
+│   ├── config/                Environment variables, paths, limits
+│   ├── database/
+│   │   ├── connection.js      Opens the SQLite database
+│   │   └── migrations.js      Creates tables / upgrades older databases
+│   ├── repositories/          Data access: SQL only, no business rules
+│   ├── services/              Business rules (validation, personal links, stats, CSV)
+│   ├── controllers/           HTTP in/out: read request, call a service, send JSON
+│   ├── routes/                URL -> controller mapping (public + admin)
+│   ├── middleware/            basicAuth, rateLimit, errorHandler
+│   └── utils/                 clean text, CSV cell, HttpError
+│
+├── tests/                     Automated tests of the services
+│
+├── public/                    ── GUEST PAGE (served at /) ──
+│   ├── index.html             Markup only
+│   └── assets/
+│       ├── css/main.css
+│       ├── images/            hero.jpg (couple photo), ticket-bg.jpg (your invitation image)
+│       ├── audio/             music.mp3 (optional)
+│       └── js/                ES modules
+│           ├── main.js        Starts everything
+│           ├── config.js      Date, texts of the calendar event, asset paths   <- edit here
+│           ├── state.js       Token (personal link) + current guest
+│           ├── services/api.js        Every server call
+│           ├── ui/toast.js
+│           ├── utils/         dom.js, storage.js
+│           └── features/      countdown, calendar, splash (+music), rsvp, qr, guestbook, ticket (PDF)
+│
+└── admin/                     ── DASHBOARD (served at /admin, password protected) ──
+    ├── index.html
+    └── assets/ css/admin.css, js/ (api.js, views.js, main.js)
+```
 
-You have nothing to create by hand. On first start, `server.js` creates the file
-`data/wedding.db` and these tables. If you already ran the first version, your existing
-database is upgraded automatically and keeps all its data:
+### How a request flows
 
-| Table      | Columns                                                       |
-|------------|---------------------------------------------------------------|
-| `guests`   | id, token (secret, unique), name, created_at                  |
-| `rsvps`    | id, name, name_key (unique), status (`accepted`/`declined`), guest_id, created_at, updated_at |
-| `messages` | id, author, text, created_at                                  |
+`Browser -> routes -> (middleware) -> controller -> service -> repository -> SQLite`
 
-- A guest who answers twice **updates** their answer (matched by name, case-insensitive).
-- **Back it up**: copy `data/wedding.db` somewhere safe (also `wedding.db-wal` if present).
-- To look inside: install "DB Browser for SQLite" (free) and open the file.
+Example, a guest answers the RSVP:
+`POST /api/rsvp` -> `public.routes.js` (rate limit) -> `rsvp.controller.js` -> `rsvp.service.js`
+(validates, cleans, applies the personal-link rules) -> `rsvp.repository.js` (INSERT ... ON CONFLICT UPDATE).
 
-## 6. Personal links for each guest
+Rules of the layers: a controller never writes SQL, a repository never knows about HTTP,
+a service never touches `req`/`res`. To add a feature, add a repository method, a service
+function, a controller and a route, in that order.
 
-1. Open `/admin` and click the **Liens invités** tab.
-2. Paste your guests' names, one per line, then click **Créer les liens**.
-3. For each guest, click **Copier le lien** or **WhatsApp** (opens WhatsApp with a ready message).
-4. Send each guest their own link. It looks like `https://your-site/?g=Xk3f9aB2cD_e`.
+## Where to change things
 
-When a guest opens their link:
-- their name is filled in and locked (they can't answer for someone else),
-- the page greets them ("Cher(e) Julie"),
-- their QR pass carries their secret code,
-- the messages they write are signed with their real name,
-- their answer shows in your dashboard, and pending guests show as "En attente".
+| I want to change...                          | File |
+|-----------------------------------------------|------|
+| Countdown date, calendar event, music path     | `public/assets/js/config.js` |
+| Names, texts, programme, maps, dress code      | `public/index.html` |
+| Colors (`--pur`, `--gold`) and layout          | `public/assets/css/main.css` |
+| Couple photo                                   | `public/assets/images/hero.jpg` |
+| Invitation image used for the PDF ticket       | `public/assets/images/ticket-bg.jpg` (keep the "Vous convient ..." line empty) |
+| Where the guest name is written on the ticket  | `public/assets/js/features/ticket.js` |
+| Music (optional)                               | `public/assets/audio/music.mp3` |
+| Admin password                                 | `.env` |
+| Limits (seats, spam limit)                     | `src/config/index.js` |
 
-A guest can change their answer any time from the same link. Deleting a guest in the
-dashboard removes their link and their answer. The plain link `/` keeps working for anyone
-you didn't create a link for (they type their name).
+## Database
 
-## 7. The PDF ticket
+Created automatically on first start (`data/wedding.db`). Tables: `guests` (secret token, name, table),
+`rsvps` (answer, phone, seats, note), `messages`. Older databases are upgraded automatically,
+no data is lost. Back up with the dashboard's **Exporter CSV** button.
 
-Once a guest presses **Confirmer ma venue**, a "Merci d'avoir confirmé votre présence" card appears
-with their QR code and a **Télécharger mon billet (PDF)** button just below it. The card and the
-button are hidden for guests who have not answered or who declined.
+## Personal links and table numbers
 
-The ticket is your own invitation (`public/ticket-bg.jpg`) with the guest's name written on the
-"Vous convient ..." line, plus a footer with a thank-you message and the guest's QR code.
-It is created in the guest's browser, so nothing extra is installed on the server, but the
-guest's phone needs internet access to load the PDF library and fonts.
+Dashboard, "Liens invités" tab: one guest per line. Write `Name | Table` to assign a table
+(example: `Julie Mbala | Taittinger`). Each guest gets a private link `/?g=SECRET`.
 
-To use a different invitation design, replace `public/ticket-bg.jpg` with an image of the same
-proportions (3:4 portrait, about 1086 x 1448 px) whose "Vous convient ..." line is empty. The
-name is drawn at the position set in `drawTicket()` (look for `'Vous convient '`).
+## Hosting
 
-## 8. Page design (inspired by your video)
-
-The guest page opens with a cover card ("Ouvrir l'invitation"), then the couple photo, the verse,
-the countdown to the town hall (07/11/2026 at 10h30), the programme timeline, the two maps,
-the RSVP form (phone, number of seats, notes), the QR code + PDF ticket, and the guestbook.
-
-- **Music (optional)**: save an mp3 as `public/music.mp3`. It starts when the guest opens the invitation,
-  and a play/pause button appears on the photo. Without the file, no button is shown.
-- **Table number**: in the dashboard, "Liens invités" tab, write `Name | Table` (e.g. `Julie Mbala | Taittinger`).
-  The guest sees "Numéro de table" in their RSVP form.
-- **Colors**: change `--pur` (purple) and `--gold` at the top of the style block in `public/index.html`.
-
-## 9. Customize
-
-- Names, date, place, texts → edit `public/index.html`.
-- Countdown date → `WEDDING_DATE` at the top of the `<script>` in `public/index.html`.
-- Couple photo → save it as `public/hero.jpg` (portrait, ~1200px wide is plenty).
-- Colors → the `:root{...}` line at the top of the `<style>` (`--gold` is the main color).
-
-## 10. Put it online
-
-The server must run somewhere and the database file must **persist**.
-- **Not Vercel / Netlify**: they don't keep files, so the database would be wiped.
-- **Render.com, Railway, Fly.io, or a VPS** work. On Render/Railway: create a Node web service
-  from your code, build command `npm install`, start command `npm start`, add environment variables
-  `ADMIN_USER` and `ADMIN_PASSWORD`, and **attach a persistent disk/volume**, then set
-  `DB_PATH` to a file on that disk (e.g. `/data/wedding.db`).
-- Use HTTPS (the platforms above give it for free) so your admin password is encrypted.
-
-## Security notes
-- Change `ADMIN_PASSWORD`. The server warns you if you leave the default.
-- Guest text is always shown as plain text (no HTML injection).
-- Writes are limited to 20 per minute per visitor to reduce spam.
+- Any host that runs Node.js >= 18 and keeps files on disk (VPS, cPanel "Setup Node.js App", ...).
+- cPanel: application root = this folder, startup file = `server.js`, then run `npm install`.
+- Set `ADMIN_USER`, `ADMIN_PASSWORD` (and optionally `DB_PATH`, `PORT`) as environment variables or in `.env`.
+- Use HTTPS so the dashboard password is encrypted.
