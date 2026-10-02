@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Espace des mariés</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbf9f5;--ink:#2b2622;--mute:#8a8178;--gold:#c8912b;--card:#f4efe6;--line:#e4dccd;--ok:#2f7d4f;--no:#b4483a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 'DM Sans',system-ui,sans-serif;display:flex;justify-content:center}
+main{width:100%;max-width:720px;padding:24px 16px 60px}
+h1{font:italic 400 30px 'Playfair Display',serif;margin:0 0 4px}
+.sub{color:var(--mute);font-size:13px;margin:0 0 22px}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:22px}
+.stat{background:var(--card);border-radius:14px;padding:12px 6px;text-align:center}
+.stat b{display:block;font:600 26px 'Playfair Display',serif}
+.stat span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.stat.ok b{color:var(--ok)}.stat.no b{color:var(--no)}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tab,.btn{font:700 11px 'DM Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:999px;padding:9px 14px;cursor:pointer;text-decoration:none;display:inline-block}
+.tab.on{background:var(--gold);color:#fff}
+.tab:focus-visible,.btn:focus-visible,.del:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.tools{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.tools input{flex:1;font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.list{display:grid;gap:8px}
+.row{background:var(--card);border-radius:14px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.row .main{min-width:0}
+.row .name{font-weight:700;overflow-wrap:anywhere}
+.row .txt{font:italic 15px 'Playfair Display',serif;overflow-wrap:anywhere;margin-top:2px}
+.row .meta{font-size:11px;color:var(--mute);margin-top:2px}
+.pill{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;white-space:nowrap;align-self:center}
+.pill.accepted{background:#e3f1e8;color:var(--ok)}.pill.declined{background:#f6e1dd;color:var(--no)}
+.del{background:none;border:0;color:var(--mute);cursor:pointer;font-size:18px;line-height:1;padding:4px}
+.del:hover{color:var(--no)}
+[hidden]{display:none!important}
+.pill.pending{background:#eee6d6;color:var(--mute)}
+.acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.mini{font:700 10px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:999px;padding:6px 11px;cursor:pointer;text-decoration:none}
+.mini:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.add{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px}
+.add textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);margin-bottom:10px}
+.add p{margin:0 0 8px;font-size:13px;color:var(--mute)}
+.empty{text-align:center;color:var(--mute);padding:30px 0}
+@media(max-width:480px){.stats{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Espace des mariés</h1>
+  <p class="sub">Irène &amp; Benjamin — réponses et messages de vos invités</p>
+
+  <div class="stats">
+    <div class="stat ok"><b id="sAcc">–</b><span>Présents</span></div>
+    <div class="stat ok"><b id="sSeats">–</b><span>Places</span></div>
+    <div class="stat no"><b id="sDec">–</b><span>Absents</span></div>
+    <div class="stat"><b id="sPen">–</b><span>En attente</span></div>
+    <div class="stat"><b id="sMsg">–</b><span>Messages</span></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-t="all">Tous</button>
+    <button class="tab" data-t="accepted">Présents</button>
+    <button class="tab" data-t="declined">Absents</button>
+    <button class="tab" data-t="guests">Liens invités</button>
+    <button class="tab" data-t="messages">Messages</button>
+  </div>
+
+  <div class="add" id="addBox" hidden>
+    <p>Un invité par ligne. Pour indiquer sa table : <b>Nom | Table</b> (ex. Julie Mbala | Taittinger). Chaque invité reçoit son propre lien secret.</p>
+    <textarea id="names" rows="4" placeholder="Julie Mbala | Taittinger&#10;Louis Kabongo | Moët&#10;Marie-Ange Tshala"></textarea>
+    <button class="btn" id="addBtn">Créer les liens</button>
+  </div>
+
+  <div class="tools">
+    <input id="search" type="search" placeholder="Rechercher…" aria-label="Rechercher">
+    <a class="btn" href="/api/admin/rsvps.csv">Exporter CSV</a>
+  </div>
+
+  <div class="list" id="list"></div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+let tab = 'all', rsvps = [], messages = [], guests = [];
+
+const fmt = iso => new Date(iso).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+
+async function get(url){ const r = await fetch(url); if (!r.ok) throw new Error(r.status); return r.json(); }
+
+async function load(){
+  try {
+    const [s, r, m, g] = await Promise.all([get('/api/admin/summary'), get('/api/admin/rsvps'), get('/api/admin/messages'), get('/api/admin/guests')]);
+    $('sAcc').textContent = s.accepted; $('sSeats').textContent = s.seats; $('sDec').textContent = s.declined; $('sPen').textContent = s.pending; $('sMsg').textContent = s.messages;
+    rsvps = r; messages = m; guests = g; render();
+  } catch(e){ $('list').innerHTML = '<div class="empty">Impossible de charger les données.</div>'; }
+}
+
+function render(){
+  const term = $('search').value.trim().toLowerCase(), list = $('list'); list.innerHTML = '';
+  let items;
+  if (tab === 'messages') {
+    items = messages.filter(m => (m.author + ' ' + m.text).toLowerCase().includes(term));
+    items.forEach(m => {
+      const row = document.createElement('div'); row.className = 'row';
+      const main = document.createElement('div'); main.className = 'main';
+      const n = document.createElement('div'); n.className = 'name'; n.textContent = m.author;
+      const t = document.createElement('div'); t.className = 'txt'; t.textContent = '“' + m.text + '”';
+      const d = document.createElement('div'); d.className = 'meta'; d.textContent = fmt(m.created_at);
+      main.append(n, t, d);
+      const del = document.createElement('button'); del.className = 'del'; del.title = 'Supprimer'; del.setAttribute('aria-label', 'Supprimer le message'); del.textContent = '×';
+      del.onclick = async () => { if (confirm('Supprimer ce message ?')) { await fetch('/api/admin/messages/' + m.id, { method: 'DELETE' }); load(); } };
+      row.append(main, del); list.append(row);
+    });
+  } else if (tab === 'guests') {
+    items = guests.filter(g => g.name.toLowerCase().includes(term));
+    items.forEach(g => {
+      const link = location.origin + '/?g=' + g.token;
+      const row = document.createElement('div'); row.className = 'row';
+      const main = document.createElement('div'); main.className = 'main';
+      const n = document.createElement('div'); n.className = 'name'; n.textContent = g.name + (g.table_label ? '  ·  Table ' + g.table_label : '');
+      const acts = document.createElement('div'); acts.className = 'acts';
+      const copy = document.createElement('button'); copy.className = 'mini'; copy.textContent = 'Copier le lien';
+      copy.onclick = async () => {
+        try { await navigator.clipboard.writeText(link); copy.textContent = 'Copié ✓'; setTimeout(() => copy.textContent = 'Copier le lien', 1800); }
+        catch(e){ prompt('Copiez ce lien :', link); }
+      };
+      const wa = document.createElement('a'); wa.className = 'mini'; wa.target = '_blank'; wa.rel = 'noopener'; wa.textContent = 'WhatsApp';
+      wa.href = 'https://wa.me/?text=' + encodeURIComponent('Bonjour ' + g.name + ', voici votre invitation personnelle à notre mariage : ' + link);
+      acts.append(copy, wa); main.append(n, acts);
+      const p = document.createElement('span'); p.className = 'pill ' + (g.status || 'pending');
+      p.textContent = g.status === 'accepted' ? 'Présent' : g.status === 'declined' ? 'Absent' : 'En attente';
+      const del = document.createElement('button'); del.className = 'del'; del.title = 'Supprimer'; del.setAttribute('aria-label', "Supprimer l'invité"); del.textContent = '×';
+      del.onclick = async () => { if (confirm('Supprimer ' + g.name + ' et son lien ?')) { await fetch('/api/admin/guests/' + g.id, { method: 'DELETE' }); load(); } };
+      row.append(main, p, del); list.append(row);
+    });
+  } else {
+    items = rsvps.filter(r => (tab === 'all' || r.status === tab) && r.name.toLowerCase().includes(term));
+    items.forEach(r => {
+      const row = document.createElement('div'); row.className = 'row';
+      const main = document.createElement('div'); main.className = 'main';
+      const n = document.createElement('div'); n.className = 'name'; n.textContent = r.name;
+      const d = document.createElement('div'); d.className = 'meta';
+      d.textContent = [r.status === 'accepted' ? (r.seats || 1) + ' place(s)' : '', r.phone, r.table_label ? 'Table ' + r.table_label : '', fmt(r.updated_at)].filter(Boolean).join(' · ');
+      main.append(n, d);
+      if (r.note){ const nt = document.createElement('div'); nt.className = 'txt'; nt.style.fontSize = '14px'; nt.textContent = '“' + r.note + '”'; main.append(nt); }
+      const p = document.createElement('span'); p.className = 'pill ' + r.status; p.textContent = r.status === 'accepted' ? 'Présent' : 'Absent';
+      const del = document.createElement('button'); del.className = 'del'; del.title = 'Supprimer'; del.setAttribute('aria-label', 'Supprimer la réponse'); del.textContent = '×';
+      del.onclick = async () => { if (confirm('Supprimer la réponse de ' + r.name + ' ?')) { await fetch('/api/admin/rsvps/' + r.id, { method: 'DELETE' }); load(); } };
+      row.append(main, p, del); list.append(row);
+    });
+  }
+  if (!items.length) list.innerHTML = '<div class="empty">Rien à afficher pour le moment.</div>';
+}
+
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('on')); b.classList.add('on'); tab = b.dataset.t; $('addBox').hidden = tab !== 'guests'; render();
+});
+$('search').oninput = render;
+$('addBtn').onclick = async () => {
+  const names = $('names').value;
+  if (!names.trim()) return;
+  const r = await fetch('/api/admin/guests', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ names }) });
+  if (r.ok) { $('names').value = ''; load(); } else alert('Impossible de créer les liens.');
+};
+load(); setInterval(load, 30000);   // refresh every 30 s
+</script>
+</body>
+</html>
