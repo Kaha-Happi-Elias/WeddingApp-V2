@@ -160,7 +160,7 @@ const getAttendance = () =>
 
 /** Update the visible seat counter and stepper button states. */
 function setSeats(n) {
-  seats = Math.min(10, Math.max(1, n));
+  seats = Math.min(2, Math.max(1, n));
   $('seats').textContent   = seats;
   $('minus').disabled      = seats <= 1;
   $('plus').disabled       = seats >= 2;
