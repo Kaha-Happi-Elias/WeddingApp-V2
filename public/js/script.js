@@ -163,7 +163,7 @@ function setSeats(n) {
   seats = Math.min(10, Math.max(1, n));
   $('seats').textContent   = seats;
   $('minus').disabled      = seats <= 1;
-  $('plus').disabled       = seats >= 10;
+  $('plus').disabled       = seats >= 2;
 }
 
 /** Lock or unlock the RSVP form fields. */

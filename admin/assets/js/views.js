@@ -20,7 +20,7 @@ const pill = (status) => el('span', 'pill ' + (status || 'pending'), STATUS_LABE
 
 export function rsvpRow(r, onDelete) {
   const main = el('div', 'main');
-  const details = [r.status === 'accepted' ? (r.seats || 1) + ' place(s)' : '', r.phone, r.table_label ? 'Table ' + r.table_label : '', fmt(r.updated_at)];
+  const details = [r.phone, r.table_label ? 'Table ' + r.table_label : '', fmt(r.updated_at)];
   main.append(el('div', 'name', r.name), el('div', 'meta', details.filter(Boolean).join(' · ')));
   if (r.note) { const note = el('div', 'txt', '“' + r.note + '”'); note.style.fontSize = '14px'; main.append(note); }
   return row(main, pill(r.status), deleteButton('Supprimer la réponse', () => confirm('Supprimer la réponse de ' + r.name + ' ?') && onDelete(r.id)));

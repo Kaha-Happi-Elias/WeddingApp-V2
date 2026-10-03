@@ -424,7 +424,7 @@ textarea:disabled {
 .opt:has(input:checked) { border-color: var(--pur); background: #f2ecfa; }
 .opt input              { accent-color: var(--pur); }
 
-/* Seat counter stepper */
+/* Seat counter stepper 
 .step        { display: flex; align-items: center; gap: 14px; }
 
 .step button {
@@ -439,7 +439,7 @@ textarea:disabled {
 }
 
 .step button:disabled { opacity: .4; }
-.step b               { font: 600 20px 'Cinzel', serif; min-width: 24px; text-align: center; }
+.step b               { font: 600 20px 'Cinzel', serif; min-width: 24px; text-align: center; }*/
 
 /* Success / already-answered banner */
 .ok {
