@@ -11,6 +11,7 @@
   --gold:  #c9a24b;
   --beige: #f4ede4;
   --line:  #e7dfd2;
+  --lavender: #f6f1f9;
 }
 
 /* ── Reset / Base ──────────────────────────────────────────────────────── */
@@ -22,7 +23,7 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  background: #fff;
+  background: /*#fff*/ #f7eefc;
   color: var(--ink);
   font: 400 17px/1.6 'Cormorant Garamond', Georgia, serif;
 }
@@ -51,6 +52,7 @@ h2 {
   font: 400 40px/1.1 'Pinyon Script', cursive;
   text-align: center;
   margin: 0 0 22px;
+  color: #c9a24b;
 }
 
 section {
@@ -70,7 +72,7 @@ section {
   z-index: 50;
   display: grid;
   place-items: center;
-  background: radial-gradient(circle at 50% 40%, #fff, #f6f1f9);
+  background: radial-gradient(circle at 50% 40%, #c8a0fb, #f6f1f9);/*background: radial-gradient(circle at 50% 40%, #fff, #f6f1f9);*/
   transition: opacity .9s, transform .9s;
 }
 
@@ -185,7 +187,7 @@ section {
 
 .icard .guest {
   font: 600 19px 'Cinzel', serif;
-  color: var(--pur);
+  color: #895dd6;/*var(--pur)*/
   letter-spacing: .08em;
   text-transform: uppercase;
   margin: 12px 0;
@@ -193,8 +195,8 @@ section {
 }
 
 .icard .nm {
-  font: 400 48px/1.15 'Pinyon Script', cursive;
-  color: var(--pur);
+  font: 400 50px/1.15 'Pinyon Script', cursive;
+  color: #c8a0fb;/*color: var(--pur)*/
   margin-top: 6px;
 }
 
@@ -352,7 +354,7 @@ textarea:focus-visible,
 
 /* ── Gift note ─────────────────────────────────────────────────────────── */
 .gift {
-  background: linear-gradient(#f3e6dc, #f6efe8);
+  background: linear-gradient(#c8a0fb, #f6efe8);/*#f3e6dc*/
   border-radius: 22px;
   padding: 36px 24px;
   margin: 0 22px;
@@ -365,7 +367,7 @@ textarea:focus-visible,
 .rsvp h2    { font: 600 44px 'Cinzel', serif; letter-spacing: .2em; margin: 0 0 20px; }
 
 .form {
-  background: var(--beige);
+  background: linear-gradient(#c8a0fb, #f6efe8);/*background: var(--beige);*/
   border-radius: 20px;
   padding: 24px 20px;
   text-align: left;
@@ -495,7 +497,7 @@ textarea.gb { font-size: 16px; }
   gap: 10px;
 }
 
-.msg { background: var(--beige); border-radius: 14px; padding: 12px 14px; }
+.msg { background: linear-gradient(#c8a0fb, #f6efe8);/*background: var(--beige);*/ border-radius: 14px; padding: 12px 14px; }
 
 .msg q {
   font-style: italic;

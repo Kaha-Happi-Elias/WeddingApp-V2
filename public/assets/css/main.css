@@ -1,16 +1,16 @@
 :root{--ink:#2b2a2e;--mute:#8b8794;--pur:#5b3f8c;--gold:#c9a24b;--beige:#f4ede4;--line:#e7dfd2}
 *{box-sizing:border-box}[hidden]{display:none!important}
 html{scroll-behavior:smooth}
-body{margin:0;background:#fff;color:var(--ink);font:400 17px/1.6 'Cormorant Garamond',Georgia,serif}
+body{margin:0;background:#f7eefc;color:var(--ink);font:400 17px/1.6 'Cormorant Garamond',Georgia,serif}
 body.lock{overflow:hidden}
 main{max-width:520px;margin:0 auto;padding-bottom:40px}
 .cin{font-family:'Cinzel',serif;text-transform:uppercase;letter-spacing:.18em}
 .script{font-family:'Pinyon Script',cursive;font-weight:400}
-h2{font:400 40px/1.1 'Pinyon Script',cursive;text-align:center;margin:0 0 22px}
+h2{font:400 40px/1.1 'Pinyon Script',cursive;text-align:center;margin:0 0 22px;color:#c9a24b}
 section{padding:44px 26px;text-align:center}
 .tiny{font-size:11px;color:var(--mute)}
 /* splash */
-#splash{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#fff,#f6f1f9);transition:opacity .9s,transform .9s}
+#splash{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#c8a0fb,#f6f1f9);transition:opacity .9s,transform .9s}
 #splash.gone{opacity:0;transform:translateY(-30px);pointer-events:none}
 .scard{width:min(86vw,360px);background:#fff;border:1px solid var(--gold);outline:1px solid #f0e6c8;outline-offset:5px;padding:46px 22px 34px;text-align:center;box-shadow:0 20px 60px #5b3f8c1f}
 .scard .cin{font-size:10px;color:var(--mute)}
@@ -28,8 +28,8 @@ section{padding:44px 26px;text-align:center}
 /* invitation card */
 .icard{border:1px solid var(--gold);border-radius:6px;padding:30px 20px;background:linear-gradient(#fff,#fbf8f2)}
 .icard .cin{font-size:11px;color:var(--mute)}
-.icard .guest{font:600 19px 'Cinzel',serif;color:var(--pur);letter-spacing:.08em;text-transform:uppercase;margin:12px 0;overflow-wrap:anywhere}
-.icard .nm{font:400 48px/1.15 'Pinyon Script',cursive;color:var(--pur);margin-top:6px}
+.icard .guest{font:600 19px 'Cinzel',serif;color:#895dd6;letter-spacing:.08em;text-transform:uppercase;margin:12px 0;overflow-wrap:anywhere}
+.icard .nm{font:400 48px/1.15 'Pinyon Script',cursive;color:#c8a0fb;margin-top:6px}
 .sep{width:60px;height:1px;background:var(--gold);margin:26px auto}
 .quote{color:var(--pur);font-size:17px;line-height:1.7}
 /* countdown */
@@ -56,11 +56,11 @@ section{padding:44px 26px;text-align:center}
 .det p{margin:.35em 0;font-size:16px}.det b{font:600 11px 'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase}
 .pal{display:flex;gap:12px;justify-content:center;margin-top:18px}
 .pal i{width:34px;height:34px;border-radius:50%;box-shadow:inset -4px -5px 8px #0003,0 3px 8px #0002}
-.gift{background:linear-gradient(#f3e6dc,#f6efe8);border-radius:22px;padding:36px 24px;margin:0 22px;font-style:italic;font-size:17px}
+.gift{background:linear-gradient(#c8a0fb,#f6efe8);border-radius:22px;padding:36px 24px;margin:0 22px;font-style:italic;font-size:17px}
 /* rsvp */
 .rsvp small{font:400 26px 'Pinyon Script',cursive;display:block}
 .rsvp h2{font:600 44px 'Cinzel',serif;letter-spacing:.2em;margin:0 0 20px}
-.form{background:var(--beige);border-radius:20px;padding:24px 20px;text-align:left}
+.form{background: linear-gradient(#c8a0fb, #f6efe8);border-radius:20px;padding:24px 20px;text-align:left}
 .tbl{background:#f9e8cc;border-left:4px solid var(--pur);padding:9px 14px;font:600 13px 'Cinzel',serif;margin-bottom:14px;border-radius:4px}
 label.l{display:block;font:600 11px 'Cinzel',serif;letter-spacing:.06em;margin:16px 0 6px}
 input[type=text],input[type=tel],textarea{width:100%;font:inherit;font-size:16px;padding:11px 13px;border:1px solid #d8cfc2;border-radius:8px;background:#fff;color:var(--ink)}
@@ -81,7 +81,7 @@ input:focus-visible,textarea:focus-visible,.btn:focus-visible,.open:focus-visibl
 /* guestbook */
 textarea.gb{font-size:16px}
 .msgs{margin-top:20px;text-align:left;display:grid;gap:10px}
-.msg{background:var(--beige);border-radius:14px;padding:12px 14px}
+.msg{background: linear-gradient(#c8a0fb, #f6efe8);border-radius:14px;padding:12px 14px}
 .msg q{font-style:italic;overflow-wrap:anywhere;quotes:"“" "”"}
 .msg div{display:flex;justify-content:space-between;margin-top:4px;font:600 9px 'Cinzel',serif;letter-spacing:.12em;color:var(--pur);text-transform:uppercase}
 .msg small{color:var(--mute);letter-spacing:0;text-transform:none;font-family:inherit;font-weight:400;font-size:12px}
