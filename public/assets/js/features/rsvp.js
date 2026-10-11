@@ -1,12 +1,11 @@
 import { $ } from '../utils/dom.js';
 import { state } from '../state.js';
-import { store } from '../utils/storage.js';
 import { api } from '../services/api.js';
 import { toast } from '../ui/toast.js';
 import { drawQR } from './qr.js';
-
+ 
 const attendance = () => (document.querySelector('input[name=att]:checked') || {}).value;
-
+ 
 /** Locks the form once the guest has answered ("Réponse déjà enregistrée"). */
 function lockForm(on) {
   ['fname', 'fphone', 'fnote'].forEach(id => { $(id).disabled = on || (id === 'fname' && !!state.token); });
@@ -16,18 +15,19 @@ function lockForm(on) {
   $('done').hidden = !on;
   $('edit').hidden = !on;
 }
-
+ 
 /** Paints the whole page from state.guest. */
 export function renderGuest() {
   const g = state.guest;
   $('fname').value = g.name || '';
   $('fphone').value = g.phone || '';
   $('fnote').value = g.note || '';
-  $('gname').textContent = g.name ? g.name : 'Cher(e) invité(e)';
+  // the greeting shows a name only for a personal link (?g=...); an open link always says "Cher(e) invité(e)"
+  $('gname').textContent = state.token && g.name ? g.name : 'Cher(e) invité(e)';
   if (g.table) { $('tbl').hidden = false; $('tbl').textContent = '★ NUMÉRO DE TABLE : ' + g.table; }
   document.querySelectorAll('input[name=att]').forEach(r => { r.checked = r.value === g.status; });
   lockForm(!!g.status);
-
+ 
   const accepted = g.status === 'accepted';       // the QR code and ticket are only for guests who confirmed
   $('passSec').hidden = !accepted;
   if (accepted) {
@@ -37,7 +37,7 @@ export function renderGuest() {
     $('passSec').classList.add('in');
   }
 }
-
+ 
 async function submit(e) {
   const name = $('fname').value.trim();
   const status = attendance();
@@ -50,7 +50,6 @@ async function submit(e) {
       ...state.guest, name: state.token ? state.guest.name : name, status,
       phone: $('fphone').value, note: $('fnote').value,
     };
-    if (!state.token) store.set('guest', state.guest);
     renderGuest();
     if (status === 'accepted') {
       toast('Merci ! Votre billet est prêt 🎉');
@@ -58,12 +57,12 @@ async function submit(e) {
     } else toast('Réponse enregistrée');
   } catch (err) { toast(err.message); $('submit').disabled = false; }
 }
-
+ 
 export function initRsvp() {
   $('edit').onclick = () => lockForm(false);
   $('submit').onclick = submit;
 }
-
+ 
 /** With a personal link (?g=...), loads the guest's name, table and previous answer from the server. */
 export async function loadGuest() {
   if (!state.token) return;

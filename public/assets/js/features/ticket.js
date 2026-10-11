@@ -32,7 +32,7 @@ async function drawTicket(){
   const ctx = c.getContext('2d');
   const SCRIPT = '"Pinyon Script", "Brush Script MT", cursive', SERIF = '"Cormorant Garamond", Georgia, serif';
   const INK = '#2e2a28', GOLD = '#a8741a', SOFT = '#6b5d4e';
-  const who = state.guest.name || 'cher invité';
+  const who = (state.guest.name || 'cher invité').toLocaleUpperCase('fr-FR');
 
   ctx.drawImage(bg, 0, 0);                                    // the invitation, unchanged
   say(ctx, 'Vous convient ' + who, W / 2 - 2, 534, '600 ', SERIF, 38, 520, INK);   // replaces the dotted line
