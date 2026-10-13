@@ -9,6 +9,6 @@ async function request(url, method = 'GET', body) {
 export const api = {
   getGuest: token => request('/api/guest/' + encodeURIComponent(token)),
   saveRsvp: payload => request('/api/rsvp', 'POST', payload),
-  getMessages: () => request('/api/messages'),
+  getMessages: token => request('/api/messages' + (token ? '?token=' + encodeURIComponent(token) : '')),
   postMessage: payload => request('/api/messages', 'POST', payload),
 };

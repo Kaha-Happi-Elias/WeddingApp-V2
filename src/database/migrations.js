@@ -31,6 +31,8 @@ function migrate(db) {
       id         INTEGER PRIMARY KEY AUTOINCREMENT,
       author     TEXT NOT NULL,
       text       TEXT NOT NULL,
+      token      TEXT,
+      guest_id   INTEGER,
       created_at TEXT NOT NULL DEFAULT (${NOW})
     );
   `);
@@ -40,6 +42,8 @@ function migrate(db) {
   addColumn(db, 'rsvps', 'seats', 'INTEGER DEFAULT 1');
   addColumn(db, 'rsvps', 'note', 'TEXT');
   addColumn(db, 'guests', 'table_label', 'TEXT');
+  addColumn(db, 'messages', 'token', 'TEXT');
+  addColumn(db, 'messages', 'guest_id', 'INTEGER');
 }
 
 module.exports = { migrate, NOW };

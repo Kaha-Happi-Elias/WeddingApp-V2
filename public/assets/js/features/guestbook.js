@@ -5,10 +5,32 @@ import { toast } from '../ui/toast.js';
 
 const shortDate = iso => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
 
-export async function loadMessages() {
+function getGuestToken() {
+  if (state.token) return state.token;
   try {
-    const list = await api.getMessages();
-    $('count').textContent = list.length + (list.length > 1 ? ' messages' : ' message');
+    let local = localStorage.getItem('guest_msg_token');
+    if (!local) {
+      local = 'anon_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+      localStorage.setItem('guest_msg_token', local);
+    }
+    return local;
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function loadMessages() {
+  const token = getGuestToken();
+  if (!token) {
+    $('count').textContent = '';
+    $('msgs').innerHTML = '';
+    return;
+  }
+  try {
+    const list = await api.getMessages(token);
+    $('count').textContent = list.length
+      ? (list.length > 1 ? 'Vos messages envoyés aux mariés :' : 'Votre message envoyé aux mariés :')
+      : '';
     $('msgs').innerHTML = '';
     list.forEach(m => {
       const card = document.createElement('div'); card.className = 'msg';
@@ -27,9 +49,10 @@ export function initGuestbook() {
     if (!text) { toast('Écrivez un message'); return; }
     button.disabled = true;
     try {
-      await api.postMessage({ author: $('fname').value.trim() || state.guest.name || 'Invité', text, token: state.token });
+      const token = getGuestToken();
+      await api.postMessage({ author: $('fname').value.trim() || state.guest.name || 'Invité', text, token });
       $('msg').value = '';
-      toast("Message envoyé au livre d'or ✨");
+      toast("Message envoyé aux mariés ✨");
       loadMessages();
     } catch (err) { toast(err.message); }
     button.disabled = false;

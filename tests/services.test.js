@@ -48,11 +48,14 @@ test('open link: same name (any case) updates the same answer', () => {
   assert.equal(rsvpService.list().length, before + 1);
 });
 
-test('messages are signed with the real name of a personal link', () => {
+test('messages are signed with the real name of a personal link and visible only to author and admin', () => {
   const [{ token }] = guestService.createMany('Sarah-Jane');
   messageService.create({ author: 'Someone else', text: '  Bravo !  ', token });
-  assert.equal(messageService.listPublic()[0].author, 'Sarah-Jane');
-  assert.equal(messageService.listPublic()[0].text, 'Bravo !');
+  assert.equal(messageService.listPublic(token)[0].author, 'Sarah-Jane');
+  assert.equal(messageService.listPublic(token)[0].text, 'Bravo !');
+  assert.equal(messageService.listPublic('other-token').length, 0);
+  assert.equal(messageService.listPublic().length, 0);
+  assert.ok(messageService.listAll().some(m => m.text === 'Bravo !'));
   assert.throws(() => messageService.create({ text: '   ' }), { status: 400 });
 });
 
